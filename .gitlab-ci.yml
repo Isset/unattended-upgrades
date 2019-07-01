@@ -1,0 +1,59 @@
+image: hyperized/yaml-linter:latest
+
+stages:
+  - yaml
+  - syntax
+  - execute
+
+# If this does not passes, don't bother even trying Ansible :)
+yaml_lint:
+  stage: yaml
+  script:
+    - yaml-lint -i -q .
+
+# Before script anchor
+.before: &before
+  before_script:
+    - mkdir -p /etc/ansible/roles/`basename "$PWD"` && cp -R * /etc/ansible/roles/`basename "$PWD"`
+    - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.isset.nl/operations/isset.package.git /etc/ansible/roles/isset.package
+
+# Ansible based syntax check anchor
+.syntax_check: &syntax
+  stage: syntax
+  <<: *before
+  script:
+    - ansible --version
+    - ansible-playbook --syntax-check tests/main.yml
+
+# Execute anchor
+.execute: &execute
+  stage: execute
+  <<: *before
+  script:
+    - ansible-playbook tests/main.yml
+
+# Do syntax checks on all supported versions
+syntax-ansible2.6:
+  <<: *syntax
+  image: hyperized/ansible-docker:2.6
+
+syntax-ansible2.7:
+  <<: *syntax
+  image: hyperized/ansible-docker:2.7
+
+syntax-ansible2.8:
+  <<: *syntax
+  image: hyperized/ansible-docker:2.8
+
+# Do execution checks on all supported versions
+execute-ansible2.6:
+  <<: *execute
+  image: hyperized/ansible-docker:2.6-bionic
+
+execute-ansible2.7:
+  <<: *execute
+  image: hyperized/ansible-docker:2.7-bionic
+
+execute-ansible2.8:
+  <<: *execute
+  image: hyperized/ansible-docker:2.8-bionic

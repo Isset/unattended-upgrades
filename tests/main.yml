@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  become: yes
+  roles:
+    - isset.unattended-upgrades
+
+  tasks:
+    - command: unattended-upgrades --dry-run
