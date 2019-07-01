@@ -24,7 +24,7 @@ Role Variables
 Dependencies
 ------------
 
-    n/a
+    isset.package
 
 Example Playbook
 ----------------
