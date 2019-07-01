@@ -2,4 +2,4 @@
 dependencies:
   - role: isset.package
     package_name: unattended-upgrades
-    package_state: "{{ isset_unattended_upgrades_installed }}"
+    package_state: "{{ isset_unattended_upgrades_state }}"

@@ -1,5 +1,4 @@
 ---
-isset_unattended_upgrades_enabled: True
 isset_unattended_upgrades_state: installed
 isset_unattended_upgrades_unattended_upgrade: 1
 isset_unattended_upgrades_autoclean_interval: 7
